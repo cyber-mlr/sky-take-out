@@ -6,6 +6,7 @@ import com.sky.entity.Employee;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 @Mapper
 public interface EmployeeMapper {
@@ -28,4 +29,8 @@ public interface EmployeeMapper {
 
     //分页查询
     Page<Employee> selectEmp(EmployeePageQueryDTO employeePageQueryDTO);
+
+    //修改员工
+    //@Update("update employee set name = #{name}, username = #{username}, password = #{password}, phone = #{phone}, sex = #{sex}, id_number = #{idNumber}, status = #{status}, create_time = #{createTime}, update_time = #{updateTime}, create_user = #{createUser}, update_user = #{updateUser} where id = #{id}")
+    void updateEmployee(Employee employee);
 }

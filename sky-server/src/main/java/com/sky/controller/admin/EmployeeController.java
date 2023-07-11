@@ -92,4 +92,14 @@ public class EmployeeController {
         PageResult pageResult =employeeService.selectEmp(employeePageQueryDTO);
         return Result.success(pageResult);
     }
+
+    /**
+     * 启用禁用员工账号
+     * 与修改员工公用一个接口
+     */
+    @PostMapping("status/{status}")
+    public Result updateEmployee(@PathVariable Integer status,Long id){
+        employeeService.updateEmployee(status,id);
+        return Result.success();
+    }
 }
