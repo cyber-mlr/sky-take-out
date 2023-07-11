@@ -29,4 +29,8 @@ public interface EmployeeMapper {
     //修改员工
     //@Update("update employee set name = #{name}, username = #{username}, password = #{password}, phone = #{phone}, sex = #{sex}, id_number = #{idNumber}, status = #{status}, create_time = #{createTime}, update_time = #{updateTime}, create_user = #{createUser}, update_user = #{updateUser} where id = #{id}")
     void updateEmployee(Employee employee);
+
+    //根据id查询员工
+    @Select("select * from employee where id = #{id}")
+    Employee selectEmployeeById(Long id);
 }
