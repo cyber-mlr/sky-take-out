@@ -34,8 +34,6 @@ public class EmployeeController {
     /**
      * 登录
      *
-     * @param employeeLoginDTO
-     * @return
      */
     @PostMapping("/login")
     public Result<EmployeeLoginVO> login(@RequestBody EmployeeLoginDTO employeeLoginDTO) {
@@ -63,8 +61,6 @@ public class EmployeeController {
 
     /**
      * 退出
-     *
-     * @return
      */
     @PostMapping("/logout")
     public Result<String> logout() {
@@ -77,7 +73,7 @@ public class EmployeeController {
      *
      */
     @PostMapping
-    public Result add(@RequestBody EmployeeDTO employeeDTO){
+    public Result<Integer> add(@RequestBody EmployeeDTO employeeDTO){
         employeeService.add(employeeDTO);
         return Result.success();
     }
@@ -98,7 +94,7 @@ public class EmployeeController {
      * 与修改员工公用一个接口
      */
     @PostMapping("status/{status}")
-    public Result updateEmployee(@PathVariable Integer status,Long id){
+    public Result<Integer> updateEmployee(@PathVariable Integer status,Long id){
         employeeService.updateEmployee(status,id);
         return Result.success();
     }
