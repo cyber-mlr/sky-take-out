@@ -17,4 +17,13 @@
                 (#{setMealDish.setmealId},#{setMealDish.dishId},#{setMealDish.name},#{setMealDish.price},#{setMealDish.copies})
             </foreach>
     </insert>
+
+    <!--根据套餐ids删除菜品与套餐关联数据-->
+    <delete id="deleteSetMealDishByIds">
+        DELETE FROM setmeal_dish WHERE setmeal_id IN
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+
 </mapper>
