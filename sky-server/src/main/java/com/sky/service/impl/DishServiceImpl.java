@@ -107,6 +107,7 @@ public class DishServiceImpl implements DishService {
 
     //修改菜品
     @Override
+    @Transactional
     public void updateDish(DishDTO dishDTO) {
         //修改菜品信息
         Dish dish = new Dish();
@@ -127,5 +128,10 @@ public class DishServiceImpl implements DishService {
         }
         dishFlavorMapper.deleteDishFlavor(ids);
         dishFlavorMapper.addDishFlavor(flavors);
+    }
+
+    @Override
+    public List<Dish> selectDishByCategoryId(Integer categoryId) {
+        return dishMapper.selectDishByCategoryId(categoryId);
     }
 }

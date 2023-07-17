@@ -11,4 +11,6 @@ public interface SetMealDishMapper {
     //根据菜品id查询菜品与套餐关联数据
     //@Select("select * from setmeal_dish where dish_id in ids")
     List<SetmealDish> selectDishByDishId(List<Long> ids);
+
+    void insertBySetMealId(List<SetmealDish> setmealDishes);
 }

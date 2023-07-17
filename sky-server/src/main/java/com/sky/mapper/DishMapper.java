@@ -45,4 +45,7 @@ public interface DishMapper {
     @Update("update dish set name = #{name}, category_id = #{categoryId}, price = #{price}, image = #{image}, description = #{description} where id =#{id}")
     void updateDish(Dish dish);
 
+    //根据菜品分类查询菜品
+    @Select("select * from dish where category_id = #{categoryId}")
+    List<Dish> selectDishByCategoryId(Integer categoryId);
 }

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sky.mapper.SetmealMapper">
+    <insert id="insertSetMeal" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO setmeal(name,category_id,price,description,image,create_time,update_time,create_user,update_user)
+        VALUES (#{name}, #{categoryId}, #{price}, #{description}, #{image}, #{createTime}, #{updateTime}, #{createUser}, #{updateUser})
+    </insert>
+    <!--分页查询-->
+    <select id="selectSetMeal" resultType="com.sky.vo.SetmealVO">
+        SELECT s.*, c.name AS categoryName
+        FROM setmeal AS s LEFT OUTER JOIN category AS c ON s.category_id = c.id
+        <where>
+            <if test="name != null">name like cancat('%',#{name},'%')</if>
+            <if test="categoryId != null">category_id = #{categoryId}</if>
+            <if test="status != null">status = #{status}</if>
+        </where>
+    </select>
+</mapper>
