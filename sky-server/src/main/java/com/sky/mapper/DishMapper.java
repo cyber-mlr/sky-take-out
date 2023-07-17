@@ -1,12 +1,14 @@
 package com.sky.mapper;
 
 import com.sky.annotation.AutoFill;
+import com.sky.constant.MessageConstant;
 import com.sky.dto.DishPageQueryDTO;
 import com.sky.entity.Dish;
 import com.sky.enumeration.OperationType;
 import com.sky.vo.DishVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -37,4 +39,10 @@ public interface DishMapper {
     //批量删除菜品
     //@Delete("delete from dish where id in ids")
     void deleteDish(List<Long> ids);
+
+    //修改菜品
+    @AutoFill(OperationType.UPDATE)
+    @Update("update dish set name = #{name}, category_id = #{categoryId}, price = #{price}, image = #{image}, description = #{description} where id =#{id}")
+    void updateDish(Dish dish);
+
 }
