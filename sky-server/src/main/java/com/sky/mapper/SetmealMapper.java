@@ -46,6 +46,7 @@ public interface SetmealMapper {
     void updateSetMeal(Setmeal setmeal);
 
     //查询套餐内菜品的售卖状态
+    //select a.* from dish a left join setmeal_dish b on a.id = b.dish_id where b.setmeal_id = #{id}
     @Select("select d.status from dish as d join (select dish_id from setmeal_dish as sd join setmeal as s where sd.setmeal_id = #{id}) as a where a.dish_id = d.id")
     List<Dish> selectSetMealDishStatus(Long id);
 }
