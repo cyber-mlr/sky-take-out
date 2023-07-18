@@ -1,7 +1,6 @@
 package com.sky.mapper;
 
 import com.sky.annotation.AutoFill;
-import com.sky.constant.MessageConstant;
 import com.sky.dto.DishPageQueryDTO;
 import com.sky.entity.Dish;
 import com.sky.enumeration.OperationType;
@@ -18,7 +17,7 @@ public interface DishMapper {
     /**
      * 根据分类id查询菜品数量
      * @param categoryId
-     * @return
+     * 菜品表 分类id
      */
     @Select("select count(id) from dish where category_id = #{categoryId}")
     Integer countByCategoryId(Long categoryId);

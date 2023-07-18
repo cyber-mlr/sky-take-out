@@ -2,13 +2,12 @@ package com.sky.mapper;
 
 import com.sky.annotation.AutoFill;
 import com.sky.dto.SetmealPageQueryDTO;
+import com.sky.entity.Dish;
 import com.sky.entity.Setmeal;
 import com.sky.enumeration.OperationType;
 import com.sky.vo.SetmealVO;
-import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -18,7 +17,7 @@ public interface SetmealMapper {
     /**
      * 根据分类id查询套餐的数量
      * @param id
-     * @return
+     * 菜品表 分类id
      */
     @Select("select count(id) from setmeal where category_id = #{categoryId}")
     Integer countByCategoryId(Long id);
@@ -45,4 +44,8 @@ public interface SetmealMapper {
     //修改套餐
     @AutoFill(OperationType.UPDATE)
     void updateSetMeal(Setmeal setmeal);
+
+    //查询套餐内菜品的售卖状态
+    @Select("select d.status from dish as d join (select dish_id from setmeal_dish as sd join setmeal as s where sd.setmeal_id = #{id}) as a where a.dish_id = d.id")
+    List<Dish> selectSetMealDishStatus(Long id);
 }
