@@ -18,6 +18,7 @@ public interface DishService {
 
     void updateDish(DishDTO dishDTO);
 
-    List<Dish> selectDishByCategoryId(Integer categoryId);
+    List<Dish> selectDishByCategoryId(Long categoryId);
 
+    List<DishVO> listWithFlavor(Dish dish);
 }

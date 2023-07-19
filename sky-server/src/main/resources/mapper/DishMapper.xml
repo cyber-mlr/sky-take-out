@@ -10,7 +10,7 @@
     </insert>
 
     <select id="selectDish" resultType="com.sky.vo.DishVO">
-        select d.name,d.image,c.name AS categoryName,d.price,d.status,d.update_time,d.id
+        select d.name,d.image,c.name AS categoryName,d.price,d.status,d.update_time,d.id,d.category_id,d.description
         from dish AS d
         LEFT OUTER JOIN category AS c ON c.id = d.category_id
         <where>
@@ -23,7 +23,7 @@
 
     <delete id="deleteDish">
         DELETE FROM dish
-        <where> id IN
+        <where>id IN
             <foreach collection="ids" item="id" separator="," open="(" close=")">
                 #{id}
             </foreach>

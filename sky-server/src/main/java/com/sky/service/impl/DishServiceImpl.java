@@ -61,7 +61,9 @@ public class DishServiceImpl implements DishService {
         //配置分页参数
         PageHelper.startPage(dishPageQueryDTO.getPage(), dishPageQueryDTO.getPageSize());
         //调用mapper层方法获取查询对象
-        List<DishVO> list = dishMapper.selectDish(dishPageQueryDTO);
+        Dish dish = new Dish();
+        BeanUtils.copyProperties(dishPageQueryDTO,dish);
+        List<DishVO> list = dishMapper.selectDish(dish);
         //封装Page对象
         Page<DishVO> page = (Page<DishVO>) list;
         return new PageResult(page.getTotal(), page.getResult());
@@ -131,7 +133,21 @@ public class DishServiceImpl implements DishService {
     }
 
     @Override
-    public List<Dish> selectDishByCategoryId(Integer categoryId) {
+    public List<Dish> selectDishByCategoryId(Long categoryId) {
         return dishMapper.selectDishByCategoryId(categoryId);
+    }
+
+    /**
+     * 条件查询菜品和口味
+     */
+    public List<DishVO> listWithFlavor(Dish dish) {
+        List<DishVO> dishList = dishMapper.selectDish(dish);
+
+        for (DishVO dishVO : dishList) {
+            List<DishFlavor> dishFlavors = dishFlavorMapper.selectDishFlavor(dishVO.getId());
+            dishVO.setFlavors(dishFlavors);
+        }
+
+        return dishList;
     }
 }

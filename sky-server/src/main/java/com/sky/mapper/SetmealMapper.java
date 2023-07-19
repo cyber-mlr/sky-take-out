@@ -5,6 +5,7 @@ import com.sky.dto.SetmealPageQueryDTO;
 import com.sky.entity.Dish;
 import com.sky.entity.Setmeal;
 import com.sky.enumeration.OperationType;
+import com.sky.vo.DishItemVO;
 import com.sky.vo.SetmealVO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -49,4 +50,17 @@ public interface SetmealMapper {
     //select a.* from dish a left join setmeal_dish b on a.id = b.dish_id where b.setmeal_id = #{id}
     @Select("select d.status from dish as d join (select dish_id from setmeal_dish as sd join setmeal as s where sd.setmeal_id = #{id}) as a where a.dish_id = d.id")
     List<Dish> selectSetMealDishStatus(Long id);
+
+    /**
+     * 动态条件查询套餐
+     */
+    List<Setmeal> list(Setmeal setmeal);
+
+    /**
+     * 根据套餐id查询菜品选项
+     */
+    @Select("select sd.name, sd.copies, d.image, d.description " +
+            "from setmeal_dish sd left join dish d on sd.dish_id = d.id " +
+            "where sd.setmeal_id = #{setmealId}")
+    List<DishItemVO> getDishItemBySetmealId(Long setmealId);
 }

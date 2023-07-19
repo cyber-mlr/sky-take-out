@@ -29,7 +29,7 @@ public interface DishMapper {
     void addDish(Dish dish);
 
     //分页查询
-    List<DishVO> selectDish(DishPageQueryDTO dishPageQueryDTO);
+    List<DishVO> selectDish(Dish dish);
 
     //根据id查菜品
     @Select("select * from dish where id = #{id}")
@@ -46,5 +46,5 @@ public interface DishMapper {
 
     //根据菜品分类查询菜品
     @Select("select * from dish where category_id = #{categoryId}")
-    List<Dish> selectDishByCategoryId(Integer categoryId);
+    List<Dish> selectDishByCategoryId(Long categoryId);
 }
