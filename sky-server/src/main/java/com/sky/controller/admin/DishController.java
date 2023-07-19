@@ -29,7 +29,6 @@ public class DishController {
 
     /**
      * 清理缓存数据
-     * @param pattern
      */
     private void cleanCache(String pattern){
         Set keys = redisTemplate.keys(pattern);

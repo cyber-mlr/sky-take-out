@@ -7,6 +7,7 @@ import com.sky.result.Result;
 import com.sky.service.SetMealService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,6 +21,7 @@ public class SetMealController {
     private SetMealService setMealService;
 
     //添加套餐
+    @CacheEvict(cacheNames = "setMealCache",key = "#setMealDTO.categoryId")
     @PostMapping
     public Result<Integer> insertSetMeal(@RequestBody SetmealDTO setMealDTO){
         setMealService.insertSetMeal(setMealDTO);
@@ -32,6 +34,7 @@ public class SetMealController {
         return Result.success(pageResult);
     }
     //删除套餐
+    @CacheEvict(cacheNames = "setMealCache", allEntries = true)
     @DeleteMapping
     public Result<Integer> deleteSetMealByIds(@RequestParam List<Long> ids){
         setMealService.deleteSetMealByIds(ids);
@@ -47,6 +50,7 @@ public class SetMealController {
         SetmealDTO setmealDTO = setMealService.selectSetMealById(id);
         return Result.success(setmealDTO);
     }
+    @CacheEvict(cacheNames = "setMealCache", allEntries = true)
     @PutMapping
     public Result<Integer> updateSetMeal(@RequestBody SetmealDTO setmealDTO){
         setMealService.updateSetMeal(setmealDTO);
@@ -54,6 +58,7 @@ public class SetMealController {
     }
 
     //修改套餐起售状态
+    @CacheEvict(cacheNames = "setMealCache", allEntries = true)
     @PostMapping("/status/{status}")
     public Result<Integer> updateSetMealByStatus(@PathVariable Integer status,Long id){
         setMealService.updateSetMealByStatus(status,id);
