@@ -1,6 +1,5 @@
 package com.sky.controller.admin;
 
-import com.sky.constant.StatusConstant;
 import com.sky.dto.DishDTO;
 import com.sky.dto.DishPageQueryDTO;
 import com.sky.entity.Dish;
@@ -11,9 +10,11 @@ import com.sky.vo.DishVO;
 import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/admin/dish")
@@ -23,11 +24,26 @@ public class DishController {
 
     @Autowired
     private DishService dishService;
+    @Autowired
+    private RedisTemplate redisTemplate;
+
+    /**
+     * 清理缓存数据
+     * @param pattern
+     */
+    private void cleanCache(String pattern){
+        Set keys = redisTemplate.keys(pattern);
+        redisTemplate.delete(keys);
+    }
 
     //新增菜品
     @PostMapping()
     public Result<String> addDish(@RequestBody DishDTO dishDTO){
         dishService.addDish(dishDTO);
+
+        //清理缓存数据
+        String key = "dish_" + dishDTO.getCategoryId();
+        cleanCache(key);
         return Result.success();
     }
 
@@ -43,6 +59,8 @@ public class DishController {
     @DeleteMapping
     public Result<String> deleteDish(@RequestParam List<Long> ids){
         dishService.deleteDish(ids);
+        //将所有的菜品缓存数据清理掉，所有以dish_开头的key
+        cleanCache("dish_*");
         return Result.success();
     }
 
@@ -55,10 +73,17 @@ public class DishController {
     @PutMapping()
     public Result<Integer> updateDish(@RequestBody DishDTO dishDTO){
         dishService.updateDish(dishDTO);
+        //将所有的菜品缓存数据清理掉，所有以dish_开头的key
+        cleanCache("dish_*");
         return Result.success();
     }
 
-    //添加菜品
+    @PostMapping("/status/{status}")
+    public Result<Integer> updateDishByStatus(@PathVariable Integer status,Long id){
+        dishService.updateDishByStatus(status,id);
+        return Result.success();
+    }
+
     /**
      * TODO
      *  1. 查询菜品列表
