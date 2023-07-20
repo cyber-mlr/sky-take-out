@@ -20,15 +20,31 @@ public class ShoppingCartController {
 
     //添加购物车
     @PostMapping("add")
-    private Result<Integer> add(@RequestBody ShoppingCartDTO shoppingCartDTO){
+    public Result<Integer> add(@RequestBody ShoppingCartDTO shoppingCartDTO){
         log.info("添加购物车: {}",shoppingCartDTO);
         shoppingCartService.add(shoppingCartDTO);
         return Result.success();
     }
 
+    //查询购物车
     @GetMapping("list")
-    private Result<List<ShoppingCart>> selectShoppingCart(){
+    public Result<List<ShoppingCart>> selectShoppingCart(){
         List<ShoppingCart> shoppingCartList = shoppingCartService.selectShoppingCart();
         return Result.success(shoppingCartList);
+    }
+
+    //清空购物车
+    @DeleteMapping("clean")
+    public Result<Integer> delete(){
+        shoppingCartService.delete();
+        return Result.success();
+    }
+
+    //修改购物车  减少、删除
+    @PostMapping("/sub")
+    public Result<Integer> sub(@RequestBody ShoppingCartDTO shoppingCartDTO){
+        log.info("修改或删除购物车的一个商品的数量: {}",shoppingCartDTO);
+        shoppingCartService.sub(shoppingCartDTO);
+        return Result.success();
     }
 }

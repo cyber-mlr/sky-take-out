@@ -60,7 +60,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         }
         //不存在  判断是单品还是套餐
         Long dishId = shoppingCart.getDishId();
-        if (dishId != null){
+        if (dishId != null) {
             //是单品 封装单品数据
             Dish dish = dishMapper.selectDishById(dishId);
             shoppingCart.setName(dish.getName());
@@ -86,5 +86,35 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
                 .userId(BaseContext.getCurrentId())
                 .build();
         return shoppingCartMapper.selectShoppingCartByUserId(shoppingCart);
+    }
+
+    //清空购物车
+    @Override
+    public void delete() {
+        shoppingCartMapper.delete(BaseContext.getCurrentId());
+
+    }
+
+    //修改购物车物品份数
+    @Override
+    public void sub(ShoppingCartDTO shoppingCartDTO) {
+        //判断商品的份数  大于1  修改  等于1  删除
+        ShoppingCart shoppingCart = ShoppingCart.builder()
+                .userId(BaseContext.getCurrentId())
+                .build();
+        BeanUtils.copyProperties(shoppingCartDTO, shoppingCart);
+
+        //查询购物车
+        List<ShoppingCart> shoppingCartList = shoppingCartMapper.selectShoppingCartByUserId(shoppingCart);
+        assert shoppingCartList != null;
+        ShoppingCart cart = shoppingCartList.get(0);
+        if (cart.getNumber() == 1) {
+            //删除
+            shoppingCartMapper.deleteDiahOrSetMeal(cart.getId());
+        } else {
+            //修改
+            cart.setNumber(cart.getNumber() - 1);
+            shoppingCartMapper.updateByUserId(cart);
+        }
     }
 }

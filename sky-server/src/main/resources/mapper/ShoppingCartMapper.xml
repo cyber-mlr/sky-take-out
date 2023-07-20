@@ -26,4 +26,8 @@
         INSERT INTO shopping_cart (name, user_id, dish_id, setmeal_id, dish_flavor, number, amount, image, create_time)
         VALUES (#{name}, #{userId}, #{dishId}, #{setmealId}, #{dishFlavor}, #{number}, #{amount}, #{image}, #{createTime})
     </insert>
+
+    <delete id="delete">
+        DELETE FROM shopping_cart WHERE user_id = #{userId}
+    </delete>
 </mapper>
