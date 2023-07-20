@@ -45,5 +45,15 @@
         </set>
         where id = #{id}
     </update>
+    
+<!--查询订单-->
+    <select id="selectHistoryOrders" parameterType="com.sky.dto.OrdersPageQueryDTO" resultType="com.sky.vo.OrderVO">
+        SELECT * FROM orders 
+        <where>
+            <if test="userId != null"> AND user_id = #{userId}</if>
+            <if test="status != null"> AND status = #{status}</if>
+            <if test="status != null"> AND status = #{status}</if>
+        </where>
+    </select>
 
 </mapper>

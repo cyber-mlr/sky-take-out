@@ -1,16 +1,21 @@
 package com.sky.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.sky.context.BaseContext;
+import com.sky.dto.OrdersPageQueryDTO;
 import com.sky.dto.OrdersPaymentDTO;
 import com.sky.dto.OrdersSubmitDTO;
 import com.sky.entity.*;
 import com.sky.exception.OrderBusinessException;
 import com.sky.mapper.*;
+import com.sky.result.PageResult;
 import com.sky.service.OrdersService;
 import com.sky.utils.WeChatPayUtil;
 import com.sky.vo.OrderPaymentVO;
 import com.sky.vo.OrderSubmitVO;
+import com.sky.vo.OrderVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +60,7 @@ public class OrdersServiceImpl implements OrdersService {
         AddressBook addressBook = addressBookMapper.getById(ordersSubmitDTO.getAddressBookId());
         //封装orders
         Orders orders = new Orders();
-        BeanUtils.copyProperties(ordersSubmitDTO,orders);
+        BeanUtils.copyProperties(ordersSubmitDTO, orders);
         orders.setStatus(Orders.PENDING_PAYMENT);
         orders.setOrderTime(LocalDateTime.now());
         orders.setPayStatus(Orders.UN_PAID);
@@ -68,10 +73,10 @@ public class OrdersServiceImpl implements OrdersService {
         ordersMapper.insertOrders(orders);
 
         //封装 List<OrderDetail>
-        List<OrderDetail> orderDetails =new ArrayList<>();
+        List<OrderDetail> orderDetails = new ArrayList<>();
         for (ShoppingCart shoppingCart : shoppingCartList) {
             OrderDetail orderDetail = new OrderDetail();
-            BeanUtils.copyProperties(shoppingCart,orderDetail);
+            BeanUtils.copyProperties(shoppingCart, orderDetail);
             orderDetail.setOrderId(orders.getId());
             orderDetails.add(orderDetail);
         }
@@ -93,7 +98,6 @@ public class OrdersServiceImpl implements OrdersService {
 
     /**
      * 订单支付
-     *
      */
     @Override
     public OrderPaymentVO payment(OrdersPaymentDTO ordersPaymentDTO) throws Exception {
@@ -121,7 +125,6 @@ public class OrdersServiceImpl implements OrdersService {
 
     /**
      * 支付成功，修改订单状态
-     *
      */
     @Override
     public void paySuccess(String outTradeNo) {
@@ -140,5 +143,22 @@ public class OrdersServiceImpl implements OrdersService {
                 .build();
 
         ordersMapper.update(orders);
+    }
+
+    //查询历史订单 全部订单
+    @Override
+    public PageResult selectHistoryOrders(OrdersPageQueryDTO ordersPageQueryDTO) {
+        PageHelper.startPage(ordersPageQueryDTO.getPage(),ordersPageQueryDTO.getPageSize());
+        //查询订单信息
+        List<OrderVO> orderVOList= ordersMapper.selectHistoryOrders(ordersPageQueryDTO);
+        //BeanUtils.copyProperties(ordersList,orderVOList);
+        //查询菜品信息
+        //查询订单详情
+        for (OrderVO orderVO : orderVOList) {
+            List<OrderDetail> orderDetails = ordersDetailMapper.selectByNumberAndUserId(orderVO.getId());
+            orderVO.setOrderDetailList(orderDetails);
+        }
+        Page<OrderVO> page = (Page<OrderVO>) orderVOList;
+        return new PageResult(page.getTotal(),orderVOList);
     }
 }
